@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "id": "calculator-sequences",
+  "revision": "v1.0.0",
+  "title": "TDD 계산기 1 · 연속 덧셈·뺄셈",
+  "description": "여러 자리 숫자와 연속 연산을 처리해요.",
+  "sources": [
+    "https://slog.gg/p/14151"
+  ],
+  "sections": [
+    {
+      "id": "reading-1",
+      "title": "원문 사례에서 한 단계씩",
+      "body": "처음에는 `1 + 1`을 통과시켜요.\n다음에는 다른 두 숫자를 넣어봐요.\n정답을 상수로 반환하면 바로 실패하죠.\n원문 사례 1~11은 덧셈과 뺄셈이에요.\n이 단계는 곱셈과 괄호를 아직 다루지 않아요.\n연산자는 왼쪽부터 차례로 적용해요.\n조심하세요. split(\"-\")만으로 음수는 못 나눠요.\n숫자를 읽는 위치와 부호를 구분해 관리하세요.\n같은 테스트를 유지하며 중복 코드를 정리해요.\n"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "sequential-calc",
+      "title": "연속 정수 수식 계산하기",
+      "goal": "`Calc.run(String)`을 구현하세요.\n여러 자리 정수와 +, -를 처리해요.\n공백은 무시하세요. 입력은 유효한 수식이에요.",
+      "language": "junit",
+      "entry_file": "Exercise.java",
+      "starter_code": "class Calc {\n    static int run(String input) { return 0; }\n}\n",
+      "solution": "class Calc {\n    static int run(String input) {\n        // 공백을 건너뛰며 덧셈과 뺄셈의 부호를 기억해요.\n        String text = input.replaceAll(\"\\\\s+\", \"\");\n        int total = 0, sign = 1, i = 0;\n        // 한 반복마다 읽는 위치가 반드시 앞으로 움직여요.\n        while (i < text.length()) {\n            char c = text.charAt(i);\n            // 연산자를 만나면 다음 숫자에 적용할 부호를 바꿔요.\n            if (c == '+') { sign = 1; i++; continue; }\n            if (c == '-') { sign = -1; i++; continue; }\n            int value = 0;\n            while (i < text.length() && Character.isDigit(text.charAt(i))) {\n                // 여러 자리 숫자를 한 숫자로 조립해요.\n                value = value * 10 + text.charAt(i++) - '0';\n            }\n            total += sign * value;\n        }\n        return total;\n    }\n}\n",
+      "files": {
+        "ExerciseTest.java": "import org.junit.jupiter.api.Test;\nimport static org.assertj.core.api.Assertions.*;\nclass ExerciseTest {\n@Test void originalCases() {\n    assertThat(Calc.run(\"1 + 1\")).as(\"source case 1\").isEqualTo(2);\n    assertThat(Calc.run(\"2 + 1\")).as(\"source case 2\").isEqualTo(3);\n    assertThat(Calc.run(\"2 + 2\")).as(\"source case 3\").isEqualTo(4);\n    assertThat(Calc.run(\"1000 + 280\")).as(\"source case 4\").isEqualTo(1280);\n    assertThat(Calc.run(\"2 - 1\")).as(\"source case 5\").isEqualTo(1);\n    assertThat(Calc.run(\"3 - 1\")).as(\"source case 6\").isEqualTo(2);\n    assertThat(Calc.run(\"100 - 20\")).as(\"source case 7\").isEqualTo(80);\n    assertThat(Calc.run(\"10 + 20 + 30\")).as(\"source case 8\").isEqualTo(60);\n    assertThat(Calc.run(\"10 - 20 + 30\")).as(\"source case 9\").isEqualTo(20);\n    assertThat(Calc.run(\"10 - 10 - 10 - 10\")).as(\"source case 10\").isEqualTo(-20);\n    assertThat(Calc.run(\"10 - 10 - 10 - 10 + 10 + 10 - 10\")).as(\"source case 11\").isEqualTo(-10);\n}\n\n}\n",
+        "build.gradle": "plugins { id 'java' }\nrepositories { mavenCentral() }\njava { toolchain { languageVersion = JavaLanguageVersion.of(25) } }\ndependencies {\n    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'\n    testImplementation 'org.assertj:assertj-core:3.27.7'\n    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'\n}\nsourceSets { test { java { srcDirs = ['.']; include '*.java' } } }\ntest { useJUnitPlatform() }\n",
+        "settings.gradle": "rootProject.name = 'mq3-exercise'\n"
+      },
+      "tests": [],
+      "web_checks": [],
+      "mutations": [],
+      "required": true,
+      "narration": [
+        {
+          "action": "say",
+          "target": "problem",
+          "text": "`Calc.run(String)`을 구현하세요.\n여러 자리 정수와 +, -를 처리해요.\n공백은 무시하세요. 입력은 유효한 수식이에요."
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 실행 성공과 모든 검사 통과는 달라요. 단계마다 결과를 확인해요."
+        },
+        {
+          "action": "set_code",
+          "code": "class Calc {\n    static int run(String input) {/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");}\n}\n",
+          "say": "선언과 생성자를 먼저 준비했어요. 메서드는 하나씩 채울게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": true
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "아직 구현하지 않은 메서드가 있어요. 지금 실패하는 위치를 확인하세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "\n        // 공백을 건너뛰며 덧셈과 뺄셈의 부호를 기억해요.\n        String text = input.replaceAll(\"\\\\s+\", \"\");\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "say": "작은 조각을 채워요. 앞뒤의 변수와 조건을 함께 확인하세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "        int total = 0, sign = 1, i = 0;\n        // 한 반복마다 읽는 위치가 반드시 앞으로 움직여요.\n        while (i < text.length()) {\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "            char c = text.charAt(i);\n            // 연산자를 만나면 다음 숫자에 적용할 부호를 바꿔요.\n            if (c == '+') { sign = 1; i++; continue; }\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "            if (c == '-') { sign = -1; i++; continue; }\n            int value = 0;\n            while (i < text.length() && Character.isDigit(text.charAt(i))) {\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "                // 여러 자리 숫자를 한 숫자로 조립해요.\n                value = value * 10 + text.charAt(i++) - '0';\n            }\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "            total += sign * value;\n        }\n        return total;\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "    /*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": ""
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 읽어보세요. 아직 남은 검사와 통과한 검사를 비교해요."
+        }
+      ],
+      "source_hash": "07dc482db93ec08735058ac550795cd38427f7e9ae29c58712b26c229ed8d29e"
+    }
+  ]
+}
